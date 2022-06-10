@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title>Construction Related Injuries</title>
+<link href="build/nv.d3.css" rel="stylesheet" type="text/css">
+<link href="build/bootstrap.css" rel="stylesheet">
+
+
+<head>
+    <style>
+
+        html, body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 1000px;
+            font-family: 'system-ui';
+        }
+
+
+        .cell-hover rect {
+            stroke-width: 3;
+            fill-opacity: 0.2;
+        }
+
+        .cell-hover text {
+            fill: #000 !important;
+        }
+
+        .no-hover {
+            fill-opacity: 0.2;
+        }
+
+        .gridLines {
+            stroke: #bcbcbc;
+        }
+
+
+    </style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="navbar navbar-fixed-top" role="navigation" style="color:white;background-color:RGB(61,74,87);">
+		  <div class="nav navbar-nav" style="margin-left:15px;margin-top:10px;font-size:26px;font-weight:bold;text-align:center;">
+			CONSTRUCTION RELATED INJURIES
+		  </div>
+		</div>
+	</div>
+
+		<svg id='heatMap' viewBox="0 0 1000 800" preserveAspectRatio='xMinYMin' width="100%" height="100%" style="margin-top:40px;"></svg>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" charset="utf-8"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="build/nv.d3.js"></script>
+
+<script>
+
+	var chart = nv.models.heatMapChart();
+    var highContrast = true;
+    var showGrid = false;
+    var showAxes = true;
+	var defaultChart = {
+        x: function(d) { return d.year },
+        y: function(d) { return d.month },
+        cellValue: function(d) { return d.value },
+        cellAspectRatio: 1,
+        normalize: false,
+        colorRange: ['#fff7f3','#fde0dd','#fcc5c0','#fa9fb5','#f768a1','#dd3497','#ae017e','#7a0177','#49006a'],
+        highContrastText: highContrast,
+        showXAxis: true,
+        showYAxis: true,
+        showLegend: true,
+        showGrid: showGrid,
+        showCellValues: true,
+        alignXAxis: 'top',
+        alignYAxis: 'left',
+        cellValueFormat: function(d) { return typeof d === 'number' ? d.toFixed(0) : d },
+        cellBorderWidth: 4,
+        cellRadius: 0,
+        missingDataColor: '#bcbcbc',
+        missingDataLabel: '',
+        //xMeta: false,
+        xMeta: function(d) { return d.category },
+		yMeta: false,
+        metaOffset: 5,
+        margin: {top: 50, right: 50}
+	}
+
+
+
+	// setup default chart
+	nv.addGraph(function() {
+	
+		setChartOptions(defaultChart);
+
+		d3.select('svg#heatMap')
+			.datum(data)
+			.call(chart);
+
+		nv.utils.windowResize(chart.update);
+
+		return chart;
+	})
+
+	// update chart with new settings
+	function updatePlot(update) {
+	
+		setChartOptions(update);
+		chart.update();
+	}
+
+	// set chart settings
+	function setChartOptions(update) {
+
+		Object.keys(update).forEach(function(optName, i) {
+			var optVal = Object.values(update)[i];
+            console.log('Setting the option ' + optName + ' to ' + optVal);
+			chart[optName](optVal)
+		});
+
+	}
+
+<!-- chart.tooltip.contentGenerator(function (obj) { -->
+
+    <!-- return '<table><thead><tr><td class=x-value colspan=3><h1 class=tooltip>' + obj.month + '</h1></td></tr></thead>' + -->
+        <!-- '<tbody><tr><td class=key>Impact Factor:</td><td class=value>' + obj.year + '</td></tr>' + -->
+        <!-- '<tr><td class=key>Citations:</td><td class=value>' + obj.value + '</td></tr>' + -->
+        <!-- '</tbody></table>' -->
+<!-- }); -->
+
+<!-- chart.tooltip.contentGenerator(function (d) { -->
+          <!-- var html = "<h2>"+d.value+"</h2> <ul>"; -->
+
+          <!-- d.series.forEach(function(elem){ -->
+            <!-- html += "<li><h3 style='color:"+elem.color+"'>" -->
+                    <!-- +elem.key+"</h3> : <b>"+elem.value+"</b></li>"; -->
+          <!-- }) -->
+          <!-- html += "</ul>" -->
+          <!-- return html; -->
+        <!-- }) -->
+
+	
+	var data = [
+        <!-- {month: 'Jan', year: 2004, value: 0}, -->
+        <!-- {month: 'Feb', year: 2004, value: 3}, -->
+        <!-- {month: 'Mar', year: 2004, value: 3}, -->
+		<!-- {month: 'Apr', year: 2004, value: 3}, -->
+		<!-- {month: 'May', year: 2004, value: 2}, -->
+		<!-- {month: 'Jun', year: 2004, value: 8}, -->
+		<!-- {month: 'Jul', year: 2004, value: 6}, -->
+		<!-- {month: 'Aug', year: 2004, value: 1}, -->
+		<!-- {month: 'Sep', year: 2004, value: 4}, -->
+		<!-- {month: 'Oct', year: 2004, value: 7}, -->
+		<!-- {month: 'Nov', year: 2004, value: 6}, -->
+		<!-- {month: 'Dec', year: 2004, value: 10}, -->
+		<!-- {month: 'Jan', year: 2005, value: 0}, -->
+		<!-- {month: 'Feb', year: 2005, value: 1}, -->
+		<!-- {month: 'Mar', year: 2005, value: 6}, -->
+		<!-- {month: 'Apr', year: 2005, value: 0}, -->
+		<!-- {month: 'May', year: 2005, value: 13}, -->
+		<!-- {month: 'Jun', year: 2005, value: 9}, -->
+		<!-- {month: 'Jul', year: 2005, value: 13}, -->
+		<!-- {month: 'Aug', year: 2005, value: 1}, -->
+		<!-- {month: 'Sep', year: 2005, value: 13}, -->
+		<!-- {month: 'Oct', year: 2005, value: 6}, -->
+		<!-- {month: 'Nov', year: 2005, value: 1}, -->
+		<!-- {month: 'Dec', year: 2005, value: 3}, -->
+		<!-- {month: 'Jan', year: 2006, value: 9}, -->
+		<!-- {month: 'Feb', year: 2006, value: 10}, -->
+		<!-- {month: 'Mar', year: 2006, value: 9}, -->
+		<!-- {month: 'Apr', year: 2006, value: 9}, -->
+		<!-- {month: 'May', year: 2006, value: 7}, -->
+		<!-- {month: 'Jun', year: 2006, value: 16}, -->
+		<!-- {month: 'Jul', year: 2006, value: 7}, -->
+		<!-- {month: 'Aug', year: 2006, value: 13}, -->
+		<!-- {month: 'Sep', year: 2006, value: 14}, -->
+		<!-- {month: 'Oct', year: 2006, value: 11}, -->
+		<!-- {month: 'Nov', year: 2006, value: 5}, -->
+		<!-- {month: 'Dec', year: 2006, value: 6}, -->
+		<!-- {month: 'Jan', year: 2007, value: 10}, -->
+		<!-- {month: 'Feb', year: 2007, value: 11}, -->
+		<!-- {month: 'Mar', year: 2007, value: 6}, -->
+		<!-- {month: 'Apr', year: 2007, value: 4}, -->
+		<!-- {month: 'May', year: 2007, value: 14}, -->
+		<!-- {month: 'Jun', year: 2007, value: 13}, -->
+		<!-- {month: 'Jul', year: 2007, value: 12}, -->
+		<!-- {month: 'Aug', year: 2007, value: 12}, -->
+		<!-- {month: 'Sep', year: 2007, value: 5}, -->
+		<!-- {month: 'Oct', year: 2007, value: 13}, -->
+		<!-- {month: 'Nov', year: 2007, value: 15}, -->
+		<!-- {month: 'Dec', year: 2007, value: 6}, -->
+		<!-- {month: 'Jan', year: 2008, value: 8}, -->
+		<!-- {month: 'Feb', year: 2008, value: 10}, -->
+		<!-- {month: 'Mar', year: 2008, value: 28}, -->
+		<!-- {month: 'Apr', year: 2008, value: 11}, -->
+		<!-- {month: 'May', year: 2008, value: 18}, -->
+		<!-- {month: 'Jun', year: 2008, value: 11}, -->
+		<!-- {month: 'Jul', year: 2008, value: 21}, -->
+		<!-- {month: 'Aug', year: 2008, value: 19}, -->
+		<!-- {month: 'Sep', year: 2008, value: 14}, -->
+		<!-- {month: 'Oct', year: 2008, value: 17}, -->
+		<!-- {month: 'Nov', year: 2008, value: 11}, -->
+		<!-- {month: 'Dec', year: 2008, value: 10}, -->
+		<!-- {month: 'Jan', year: 2009, value: 29}, -->
+		<!-- {month: 'Feb', year: 2009, value: 9}, -->
+		<!-- {month: 'Mar', year: 2009, value: 38}, -->
+		<!-- {month: 'Apr', year: 2009, value: 21}, -->
+		<!-- {month: 'May', year: 2009, value: 12}, -->
+		<!-- {month: 'Jun', year: 2009, value: 22}, -->
+		<!-- {month: 'Jul', year: 2009, value: 22}, -->
+		<!-- {month: 'Aug', year: 2009, value: 24}, -->
+		<!-- {month: 'Sep', year: 2009, value: 15}, -->
+		<!-- {month: 'Oct', year: 2009, value: 20}, -->
+		<!-- {month: 'Nov', year: 2009, value: 15}, -->
+		<!-- {month: 'Dec', year: 2009, value: 14}, -->
+		<!-- {month: 'Jan', year: 2010, value: 21}, -->
+		<!-- {month: 'Feb', year: 2010, value: 10}, -->
+		<!-- {month: 'Mar', year: 2010, value: 11}, -->
+		<!-- {month: 'Apr', year: 2010, value: 16}, -->
+		<!-- {month: 'May', year: 2010, value: 22}, -->
+		<!-- {month: 'Jun', year: 2010, value: 16}, -->
+		<!-- {month: 'Jul', year: 2010, value: 15}, -->
+		<!-- {month: 'Aug', year: 2010, value: 14}, -->
+		<!-- {month: 'Sep', year: 2010, value: 12}, -->
+		<!-- {month: 'Oct', year: 2010, value: 10}, -->
+		<!-- {month: 'Nov', year: 2010, value: 8}, -->
+		<!-- {month: 'Dec', year: 2010, value: 10}, -->
+		<!-- {month: 'Jan', year: 2011, value: 5}, -->
+		<!-- {month: 'Feb', year: 2011, value: 4}, -->
+		<!-- {month: 'Mar', year: 2011, value: 10}, -->
+		<!-- {month: 'Apr', year: 2011, value: 8}, -->
+		<!-- {month: 'May', year: 2011, value: 15}, -->
+		<!-- {month: 'Jun', year: 2011, value: 17}, -->
+		<!-- {month: 'Jul', year: 2011, value: 8}, -->
+		<!-- {month: 'Aug', year: 2011, value: 20}, -->
+		<!-- {month: 'Sep', year: 2011, value: 31}, -->
+		<!-- {month: 'Oct', year: 2011, value: 9}, -->
+		<!-- {month: 'Nov', year: 2011, value: 18}, -->
+		<!-- {month: 'Dec', year: 2011, value: 7}, -->
+		<!-- {month: 'Jan', year: 2012, value: 11}, -->
+		<!-- {month: 'Feb', year: 2012, value: 11}, -->
+		<!-- {month: 'Mar', year: 2012, value: 16}, -->
+		<!-- {month: 'Apr', year: 2012, value: 24}, -->
+		<!-- {month: 'May', year: 2012, value: 15}, -->
+		<!-- {month: 'Jun', year: 2012, value: 17}, -->
+		<!-- {month: 'Jul', year: 2012, value: 19}, -->
+		<!-- {month: 'Aug', year: 2012, value: 20}, -->
+		<!-- {month: 'Sep', year: 2012, value: 12}, -->
+		<!-- {month: 'Oct', year: 2012, value: 17}, -->
+		<!-- {month: 'Nov', year: 2012, value: 9}, -->
+		<!-- {month: 'Dec', year: 2012, value: 16}, -->
+		<!-- {month: 'Jan', year: 2013, value: 26}, -->
+		<!-- {month: 'Feb', year: 2013, value: 9}, -->
+		<!-- {month: 'Mar', year: 2013, value: 19}, -->
+		<!-- {month: 'Apr', year: 2013, value: 16}, -->
+		<!-- {month: 'May', year: 2013, value: 12}, -->
+		<!-- {month: 'Jun', year: 2013, value: 13}, -->
+		<!-- {month: 'Jul', year: 2013, value: 22}, -->
+		<!-- {month: 'Aug', year: 2013, value: 20}, -->
+		<!-- {month: 'Sep', year: 2013, value: 16}, -->
+		<!-- {month: 'Oct', year: 2013, value: 17}, -->
+		<!-- {month: 'Nov', year: 2013, value: 16}, -->
+		<!-- {month: 'Dec', year: 2013, value: 17}, -->
+		<!-- {month: 'Jan', year: 2014, value: 11}, -->
+		<!-- {month: 'Feb', year: 2014, value: 29}, -->
+		<!-- {month: 'Mar', year: 2014, value: 15}, -->
+		<!-- {month: 'Apr', year: 2014, value: 16}, -->
+		<!-- {month: 'May', year: 2014, value: 23}, -->
+		<!-- {month: 'Jun', year: 2014, value: 19}, -->
+		<!-- {month: 'Jul', year: 2014, value: 26}, -->
+		<!-- {month: 'Aug', year: 2014, value: 26}, -->
+		<!-- {month: 'Sep', year: 2014, value: 27}, -->
+		<!-- {month: 'Oct', year: 2014, value: 16}, -->
+		<!-- {month: 'Nov', year: 2014, value: 17}, -->
+		<!-- {month: 'Dec', year: 2014, value: 21}, -->
+		<!-- {month: 'Jan', year: 2015, value: 18}, -->
+		<!-- {month: 'Feb', year: 2015, value: 21}, -->
+		<!-- {month: 'Mar', year: 2015, value: 33}, -->
+		<!-- {month: 'Apr', year: 2015, value: 42}, -->
+		<!-- {month: 'May', year: 2015, value: 52}, -->
+		<!-- {month: 'Jun', year: 2015, value: 33}, -->
+		<!-- {month: 'Jul', year: 2015, value: 49}, -->
+		<!-- {month: 'Aug', year: 2015, value: 43}, -->
+		<!-- {month: 'Sep', year: 2015, value: 65}, -->
+		<!-- {month: 'Oct', year: 2015, value: 46}, -->
+		<!-- {month: 'Nov', year: 2015, value: 36}, -->
+		<!-- {month: 'Dec', year: 2015, value: 34}, -->
+		<!-- {month: 'Jan', year: 2016, value: 26}, -->
+		<!-- {month: 'Feb', year: 2016, value: 38}, -->
+		<!-- {month: 'Mar', year: 2016, value: 22}, -->
+		<!-- {month: 'Apr', year: 2016, value: 54}, -->
+		<!-- {month: 'May', year: 2016, value: 45}, -->
+		<!-- {month: 'Jun', year: 2016, value: 70}, -->
+		<!-- {month: 'Jul', year: 2016, value: 57}, -->
+		<!-- {month: 'Aug', year: 2016, value: 65}, -->
+		<!-- {month: 'Sep', year: 2016, value: 73}, -->
+		<!-- {month: 'Oct', year: 2016, value: 53}, -->
+		<!-- {month: 'Nov', year: 2016, value: 55}, -->
+		<!-- {month: 'Dec', year: 2016, value: 45}, -->
+		<!-- {month: 'Jan', year: 2017, value: 38}, -->
+		<!-- {month: 'Feb', year: 2017, value: 59}, -->
+		<!-- {month: 'Mar', year: 2017, value: 47}, -->
+		<!-- {month: 'Apr', year: 2017, value: 42}, -->
+		<!-- {month: 'May', year: 2017, value: 58}, -->
+		<!-- {month: 'Jun', year: 2017, value: 86}, -->
+		<!-- {month: 'Jul', year: 2017, value: 76}, -->
+		<!-- {month: 'Aug', year: 2017, value: 65}, -->
+		<!-- {month: 'Sep', year: 2017, value: 43}, -->
+		<!-- {month: 'Oct', year: 2017, value: 73}, -->
+		<!-- {month: 'Nov', year: 2017, value: 33}, -->
+		<!-- {month: 'Dec', year: 2017, value: 51}, -->
+		<!-- {month: 'Jan', year: 2018, value: 56}, -->
+		<!-- {month: 'Feb', year: 2018, value: 63}, -->
+		<!-- {month: 'Mar', year: 2018, value: 51}, -->
+		<!-- {month: 'Apr', year: 2018, value: 59}, -->
+		<!-- {month: 'May', year: 2018, value: 96}, -->
+		<!-- {month: 'Jun', year: 2018, value: 75}, -->
+		<!-- {month: 'Jul', year: 2018, value: 66}, -->
+		<!-- {month: 'Aug', year: 2018, value: 81}, -->
+		<!-- {month: 'Sep', year: 2018, value: 54}, -->
+		<!-- {month: 'Oct', year: 2018, value: 69}, -->
+		<!-- {month: 'Nov', year: 2018, value: 41}, -->
+		<!-- {month: 'Dec', year: 2018, value: 48}, -->
+		<!-- {month: 'Jan', year: 2019, value: 43}, -->
+		<!-- {month: 'Feb', year: 2019, value: 53}, -->
+		<!-- {month: 'Mar', year: 2019, value: 41}, -->
+		<!-- {month: 'Apr', year: 2019, value: 44}, -->
+		<!-- {month: 'May', year: 2019, value: 51}, -->
+		<!-- {month: 'Jun', year: 2019, value: 55}, -->
+		<!-- {month: 'Jul', year: 2019, value: 57}, -->
+		<!-- {month: 'Aug', year: 2019, value: 62}, -->
+		<!-- {month: 'Sep', year: 2019, value: 53}, -->
+		<!-- {month: 'Oct', year: 2019, value: 47}, -->
+		<!-- {month: 'Nov', year: 2019, value: 44}, -->
+		<!-- {month: 'Dec', year: 2019, value: 44}, -->
+		<!-- {month: 'Jan', year: 2020, value: 45}, -->
+		<!-- {month: 'Feb', year: 2020, value: 66}, -->
+		<!-- {month: 'Mar', year: 2020, value: 47}, -->
+		<!-- {month: 'Apr', year: 2020, value: 6}, -->
+		<!-- {month: 'May', year: 2020, value: 22}, -->
+		<!-- {month: 'Jun', year: 2020, value: 40}, -->
+		<!-- {month: 'Jul', year: 2020, value: 57}, -->
+		<!-- {month: 'Aug', year: 2020, value: 55}, -->
+		<!-- {month: 'Sep', year: 2020, value: 47}, -->
+		<!-- {month: 'Oct', year: 2020, value: 42}, -->
+		<!-- {month: 'Nov', year: 2020, value: 43}, -->
+		<!-- {month: 'Dec', year: 2020, value: 32}, -->
+		<!-- {month: 'Jan', year: 2021, value: 40}, -->
+		<!-- {month: 'Feb', year: 2021, value: 39}, -->
+		<!-- {month: 'Mar', year: 2021, value: 42}, -->
+		<!-- {month: 'Apr', year: 2021, value: 64}, -->
+		<!-- {month: 'May', year: 2021, value: 38}, -->
+		<!-- {month: 'Jun', year: 2021, value: 42}, -->
+		<!-- {month: 'Jul', year: 2021, value: 47}, -->
+		<!-- {month: 'Aug', year: 2021, value: 44}, -->
+		<!-- {month: 'Sep', year: 2021, value: 41}, -->
+		<!-- {month: 'Oct', year: 2021, value: 33}, -->
+		<!-- {month: 'Nov', year: 2021, value: 40}, -->
+		<!-- {month: 'Dec', year: 2021, value: 35}, -->
+{year: 2004, month: 'Jan', value: 0, category: 53},
+{year: 2004, month: 'Feb', value: 3, category: 53},
+{year: 2004, month: 'Mar', value: 3, category: 53},
+{year: 2004, month: 'Apr', value: 3, category: 53},
+{year: 2004, month: 'May', value: 2, category: 53},
+{year: 2004, month: 'Jun', value: 8, category: 53},
+{year: 2004, month: 'Jul', value: 6, category: 53},
+{year: 2004, month: 'Aug', value: 1, category: 53},
+{year: 2004, month: 'Sep', value: 4, category: 53},
+{year: 2004, month: 'Oct', value: 7, category: 53},
+{year: 2004, month: 'Nov', value: 6, category: 53},
+{year: 2004, month: 'Dec', value: 10, category: 53},
+{year: 2005, month: 'Jan', value: 0, category: 66},
+{year: 2005, month: 'Feb', value: 1, category: 66},
+{year: 2005, month: 'Mar', value: 6, category: 66},
+{year: 2005, month: 'Apr', value: 0, category: 66},
+{year: 2005, month: 'May', value: 13, category: 66},
+{year: 2005, month: 'Jun', value: 9, category: 66},
+{year: 2005, month: 'Jul', value: 13, category: 66},
+{year: 2005, month: 'Aug', value: 1, category: 66},
+{year: 2005, month: 'Sep', value: 13, category: 66},
+{year: 2005, month: 'Oct', value: 6, category: 66},
+{year: 2005, month: 'Nov', value: 1, category: 66},
+{year: 2005, month: 'Dec', value: 3, category: 66},
+{year: 2006, month: 'Jan', value: 9, category: 116},
+{year: 2006, month: 'Feb', value: 10, category: 116},
+{year: 2006, month: 'Mar', value: 9, category: 116},
+{year: 2006, month: 'Apr', value: 9, category: 116},
+{year: 2006, month: 'May', value: 7, category: 116},
+{year: 2006, month: 'Jun', value: 16, category: 116},
+{year: 2006, month: 'Jul', value: 7, category: 116},
+{year: 2006, month: 'Aug', value: 13, category: 116},
+{year: 2006, month: 'Sep', value: 14, category: 116},
+{year: 2006, month: 'Oct', value: 11, category: 116},
+{year: 2006, month: 'Nov', value: 5, category: 116},
+{year: 2006, month: 'Dec', value: 6, category: 116},
+{year: 2007, month: 'Jan', value: 10, category: 121},
+{year: 2007, month: 'Feb', value: 11, category: 121},
+{year: 2007, month: 'Mar', value: 6, category: 121},
+{year: 2007, month: 'Apr', value: 4, category: 121},
+{year: 2007, month: 'May', value: 14, category: 121},
+{year: 2007, month: 'Jun', value: 13, category: 121},
+{year: 2007, month: 'Jul', value: 12, category: 121},
+{year: 2007, month: 'Aug', value: 12, category: 121},
+{year: 2007, month: 'Sep', value: 5, category: 121},
+{year: 2007, month: 'Oct', value: 13, category: 121},
+{year: 2007, month: 'Nov', value: 15, category: 121},
+{year: 2007, month: 'Dec', value: 6, category: 121},
+{year: 2008, month: 'Jan', value: 8, category: 178},
+{year: 2008, month: 'Feb', value: 10, category: 178},
+{year: 2008, month: 'Mar', value: 28, category: 178},
+{year: 2008, month: 'Apr', value: 11, category: 178},
+{year: 2008, month: 'May', value: 18, category: 178},
+{year: 2008, month: 'Jun', value: 11, category: 178},
+{year: 2008, month: 'Jul', value: 21, category: 178},
+{year: 2008, month: 'Aug', value: 19, category: 178},
+{year: 2008, month: 'Sep', value: 14, category: 178},
+{year: 2008, month: 'Oct', value: 17, category: 178},
+{year: 2008, month: 'Nov', value: 11, category: 178},
+{year: 2008, month: 'Dec', value: 10, category: 178},
+{year: 2009, month: 'Jan', value: 29, category: 241},
+{year: 2009, month: 'Feb', value: 9, category: 241},
+{year: 2009, month: 'Mar', value: 38, category: 241},
+{year: 2009, month: 'Apr', value: 21, category: 241},
+{year: 2009, month: 'May', value: 12, category: 241},
+{year: 2009, month: 'Jun', value: 22, category: 241},
+{year: 2009, month: 'Jul', value: 22, category: 241},
+{year: 2009, month: 'Aug', value: 24, category: 241},
+{year: 2009, month: 'Sep', value: 15, category: 241},
+{year: 2009, month: 'Oct', value: 20, category: 241},
+{year: 2009, month: 'Nov', value: 15, category: 241},
+{year: 2009, month: 'Dec', value: 14, category: 241},
+{year: 2010, month: 'Jan', value: 21, category: 165},
+{year: 2010, month: 'Feb', value: 10, category: 165},
+{year: 2010, month: 'Mar', value: 11, category: 165},
+{year: 2010, month: 'Apr', value: 16, category: 165},
+{year: 2010, month: 'May', value: 22, category: 165},
+{year: 2010, month: 'Jun', value: 16, category: 165},
+{year: 2010, month: 'Jul', value: 15, category: 165},
+{year: 2010, month: 'Aug', value: 14, category: 165},
+{year: 2010, month: 'Sep', value: 12, category: 165},
+{year: 2010, month: 'Oct', value: 10, category: 165},
+{year: 2010, month: 'Nov', value: 8, category: 165},
+{year: 2010, month: 'Dec', value: 10, category: 165},
+{year: 2011, month: 'Jan', value: 5, category: 152},
+{year: 2011, month: 'Feb', value: 4, category: 152},
+{year: 2011, month: 'Mar', value: 10, category: 152},
+{year: 2011, month: 'Apr', value: 8, category: 152},
+{year: 2011, month: 'May', value: 15, category: 152},
+{year: 2011, month: 'Jun', value: 17, category: 152},
+{year: 2011, month: 'Jul', value: 8, category: 152},
+{year: 2011, month: 'Aug', value: 20, category: 152},
+{year: 2011, month: 'Sep', value: 31, category: 152},
+{year: 2011, month: 'Oct', value: 9, category: 152},
+{year: 2011, month: 'Nov', value: 18, category: 152},
+{year: 2011, month: 'Dec', value: 7, category: 152},
+{year: 2012, month: 'Jan', value: 11, category: 187},
+{year: 2012, month: 'Feb', value: 11, category: 187},
+{year: 2012, month: 'Mar', value: 16, category: 187},
+{year: 2012, month: 'Apr', value: 24, category: 187},
+{year: 2012, month: 'May', value: 15, category: 187},
+{year: 2012, month: 'Jun', value: 17, category: 187},
+{year: 2012, month: 'Jul', value: 19, category: 187},
+{year: 2012, month: 'Aug', value: 20, category: 187},
+{year: 2012, month: 'Sep', value: 12, category: 187},
+{year: 2012, month: 'Oct', value: 17, category: 187},
+{year: 2012, month: 'Nov', value: 9, category: 187},
+{year: 2012, month: 'Dec', value: 16, category: 187},
+{year: 2013, month: 'Jan', value: 26, category: 203},
+{year: 2013, month: 'Feb', value: 9, category: 203},
+{year: 2013, month: 'Mar', value: 19, category: 203},
+{year: 2013, month: 'Apr', value: 16, category: 203},
+{year: 2013, month: 'May', value: 12, category: 203},
+{year: 2013, month: 'Jun', value: 13, category: 203},
+{year: 2013, month: 'Jul', value: 22, category: 203},
+{year: 2013, month: 'Aug', value: 20, category: 203},
+{year: 2013, month: 'Sep', value: 16, category: 203},
+{year: 2013, month: 'Oct', value: 17, category: 203},
+{year: 2013, month: 'Nov', value: 16, category: 203},
+{year: 2013, month: 'Dec', value: 17, category: 203},
+{year: 2014, month: 'Jan', value: 11, category: 246},
+{year: 2014, month: 'Feb', value: 29, category: 246},
+{year: 2014, month: 'Mar', value: 15, category: 246},
+{year: 2014, month: 'Apr', value: 16, category: 246},
+{year: 2014, month: 'May', value: 23, category: 246},
+{year: 2014, month: 'Jun', value: 19, category: 246},
+{year: 2014, month: 'Jul', value: 26, category: 246},
+{year: 2014, month: 'Aug', value: 26, category: 246},
+{year: 2014, month: 'Sep', value: 27, category: 246},
+{year: 2014, month: 'Oct', value: 16, category: 246},
+{year: 2014, month: 'Nov', value: 17, category: 246},
+{year: 2014, month: 'Dec', value: 21, category: 246},
+{year: 2015, month: 'Jan', value: 18, category: 472},
+{year: 2015, month: 'Feb', value: 21, category: 472},
+{year: 2015, month: 'Mar', value: 33, category: 472},
+{year: 2015, month: 'Apr', value: 42, category: 472},
+{year: 2015, month: 'May', value: 52, category: 472},
+{year: 2015, month: 'Jun', value: 33, category: 472},
+{year: 2015, month: 'Jul', value: 49, category: 472},
+{year: 2015, month: 'Aug', value: 43, category: 472},
+{year: 2015, month: 'Sep', value: 65, category: 472},
+{year: 2015, month: 'Oct', value: 46, category: 472},
+{year: 2015, month: 'Nov', value: 36, category: 472},
+{year: 2015, month: 'Dec', value: 34, category: 472},
+{year: 2016, month: 'Jan', value: 26, category: 603},
+{year: 2016, month: 'Feb', value: 38, category: 603},
+{year: 2016, month: 'Mar', value: 22, category: 603},
+{year: 2016, month: 'Apr', value: 54, category: 603},
+{year: 2016, month: 'May', value: 45, category: 603},
+{year: 2016, month: 'Jun', value: 70, category: 603},
+{year: 2016, month: 'Jul', value: 57, category: 603},
+{year: 2016, month: 'Aug', value: 65, category: 603},
+{year: 2016, month: 'Sep', value: 73, category: 603},
+{year: 2016, month: 'Oct', value: 53, category: 603},
+{year: 2016, month: 'Nov', value: 55, category: 603},
+{year: 2016, month: 'Dec', value: 45, category: 603},
+{year: 2017, month: 'Jan', value: 38, category: 671},
+{year: 2017, month: 'Feb', value: 59, category: 671},
+{year: 2017, month: 'Mar', value: 47, category: 671},
+{year: 2017, month: 'Apr', value: 42, category: 671},
+{year: 2017, month: 'May', value: 58, category: 671},
+{year: 2017, month: 'Jun', value: 86, category: 671},
+{year: 2017, month: 'Jul', value: 76, category: 671},
+{year: 2017, month: 'Aug', value: 65, category: 671},
+{year: 2017, month: 'Sep', value: 43, category: 671},
+{year: 2017, month: 'Oct', value: 73, category: 671},
+{year: 2017, month: 'Nov', value: 33, category: 671},
+{year: 2017, month: 'Dec', value: 51, category: 671},
+{year: 2018, month: 'Jan', value: 56, category: 759},
+{year: 2018, month: 'Feb', value: 63, category: 759},
+{year: 2018, month: 'Mar', value: 51, category: 759},
+{year: 2018, month: 'Apr', value: 59, category: 759},
+{year: 2018, month: 'May', value: 96, category: 759},
+{year: 2018, month: 'Jun', value: 75, category: 759},
+{year: 2018, month: 'Jul', value: 66, category: 759},
+{year: 2018, month: 'Aug', value: 81, category: 759},
+{year: 2018, month: 'Sep', value: 54, category: 759},
+{year: 2018, month: 'Oct', value: 69, category: 759},
+{year: 2018, month: 'Nov', value: 41, category: 759},
+{year: 2018, month: 'Dec', value: 48, category: 759},
+{year: 2019, month: 'Jan', value: 43, category: 594},
+{year: 2019, month: 'Feb', value: 53, category: 594},
+{year: 2019, month: 'Mar', value: 41, category: 594},
+{year: 2019, month: 'Apr', value: 44, category: 594},
+{year: 2019, month: 'May', value: 51, category: 594},
+{year: 2019, month: 'Jun', value: 55, category: 594},
+{year: 2019, month: 'Jul', value: 57, category: 594},
+{year: 2019, month: 'Aug', value: 62, category: 594},
+{year: 2019, month: 'Sep', value: 53, category: 594},
+{year: 2019, month: 'Oct', value: 47, category: 594},
+{year: 2019, month: 'Nov', value: 44, category: 594},
+{year: 2019, month: 'Dec', value: 44, category: 594},
+{year: 2020, month: 'Jan', value: 45, category: 502},
+{year: 2020, month: 'Feb', value: 66, category: 502},
+{year: 2020, month: 'Mar', value: 47, category: 502},
+{year: 2020, month: 'Apr', value: 6, category: 502},
+{year: 2020, month: 'May', value: 22, category: 502},
+{year: 2020, month: 'Jun', value: 40, category: 502},
+{year: 2020, month: 'Jul', value: 57, category: 502},
+{year: 2020, month: 'Aug', value: 55, category: 502},
+{year: 2020, month: 'Sep', value: 47, category: 502},
+{year: 2020, month: 'Oct', value: 42, category: 502},
+{year: 2020, month: 'Nov', value: 43, category: 502},
+{year: 2020, month: 'Dec', value: 32, category: 502},
+{year: 2021, month: 'Jan', value: 40, category: 505},
+{year: 2021, month: 'Feb', value: 39, category: 505},
+{year: 2021, month: 'Mar', value: 42, category: 505},
+{year: 2021, month: 'Apr', value: 64, category: 505},
+{year: 2021, month: 'May', value: 38, category: 505},
+{year: 2021, month: 'Jun', value: 42, category: 505},
+{year: 2021, month: 'Jul', value: 47, category: 505},
+{year: 2021, month: 'Aug', value: 44, category: 505},
+{year: 2021, month: 'Sep', value: 41, category: 505},
+{year: 2021, month: 'Oct', value: 33, category: 505},
+{year: 2021, month: 'Nov', value: 40, category: 505},
+{year: 2021, month: 'Dec', value: 35, category: 505},
+
+
+
+
+
+	];
+
+</script>
+</body>
+</html>
